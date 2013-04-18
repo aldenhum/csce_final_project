@@ -2,14 +2,24 @@
 #include "Window.h"
 #include "Graph.h"
 #include "GUI.h"
+#include "Point.h"
 #include "Chrono.h"
 //#include <time.h> //not needed //still not needed
 
+using namespace Graph_lib;
 
-struct Calendar_window : Window 	// Lines_window inherits from Window
+struct Calendar_window : Graph_lib::Window 	// Lines_window inherits from Window
 {
-	Calendar_window(Point xy, int w, int h, const string& title); // declare constructor
-
+	Calendar_window(Point xy, int w, int h, const string& title) // Constructor...
+	:Graph_lib::Window(xy,w,h,title),
+	prev_button(Point(0,0),  		 128, 20, "Previous Month", cb_prev),
+	next_button(Point(133,0), 		 100, 20, "Next Month",	   cb_next),
+	quit_button(Point(x_max()-70,0), 70, 20, "QUIT", 	  	   cb_quit)
+	{
+		attach(prev_button);
+		attach(next_button);
+		attach(quit_button);
+	}
 	private:
 		Button prev_button;
 		Button next_button;		// declare some buttons – type Button
@@ -24,32 +34,20 @@ struct Calendar_window : Window 	// Lines_window inherits from Window
 		static void cb_quit(Address, Address window); 	// callback for quit_button
 }; 
 
-Calendar_window::Calendar_window(Point xy, int w, int h, const string& title)
-	:Window(xy,w,h,title),
-	prev_button(Point(0,0),  		 70, 20, "Previous Month", cb_prev),
-	next_button(Point(75,0), 		 70, 20, "Next Month",	   cb_next),
-	quit_button(Point(x_max()-70,0), 70, 20, "QUIT", 	  	   cb_quit))
-{
-	attach(prev_button);
-	attach(next_button);
-	attach(quit_button);
-}
-
-
 //The callback functions... Just pass data along to "worker" functions
-Calendar_window::cb_quit(Address, Address pw)
+void Calendar_window::cb_quit(Address, Address window)
 {
-	reference_to<Calendar_window>(pw).quit();
+	reference_to<Calendar_window> (window).quit();
 }
 
-Calendar_window::cb_prev(Address, Address pw)
+void Calendar_window::cb_prev(Address, Address window)
 {
-	reference_to<Calendar_window>(pw).prev();
+	reference_to<Calendar_window> (window).prev();
 }
 
-Calendar_window::cb_next(Address, Address pw)
+void Calendar_window::cb_next(Address, Address window)
 {
-	reference_to<Calendar_window(pw).next();
+	reference_to<Calendar_window> (window).next();
 }
 
 //Our "worker" functions
@@ -78,8 +76,8 @@ void Calendar_window::next()
 	redraw();
 }
 
-struct Calendar_Day 
-{
+//struct Calendar_Day 
+//{
 	//This should ACTUALLY just contain info about the days
 	//TODO: Add a constructor which (somehow) takes a formatted date string
 	//Probably need to have a read from file in here somewhere...
@@ -91,20 +89,20 @@ struct Calendar_Day
 	}
 	private:
 		int month_start_day = 1;*/
-};
+//};
 
 int main()
 {
 	try
 	{
-		Date start;
+		Chrono::Date start;
 		int y;
 		int m;
 		int d;
-		cout << "Please enter a date (YYYY MM DD):: ";
+		/*cout << "Please enter a date (YYYY MM DD):: ";
 		cin >> y >> m >> d;
 		cout << endl;
-		start = Date(y,(Date::Month)(m),d);
+		start = Chrono::Date(y,(Chrono::Date::Month)(m),d);
 		/*time_t theTime = time(NULL);
 struct tm *aTime = localtime(&theTime);
 
@@ -116,20 +114,20 @@ int year = aTime->tm_year + 1900; // Year is # years since 1900*/
 		int old_width;
 		Rectangle* my_rect;
 		Point* p;
-		vector <vector <Point *> > board(8,vector <Point *> (8));
+		vector <vector <Point *> > board(6,vector <Point *> (7));
 		vector <Point *> pts_row;
 		if(H112 != 201206L)
 			error("Error: incorrect std_lib_facilities_3.h version ", H112);
 		
-		Calendar_window my_window(Point(50,50),width,630,"Calendar"); //declare window
+		Calendar_window my_window(Point(10,10),width,690,"Calendar"); //declare window
 
 		int row = 0;
-		for (int yy = 0; yy < 6/*board.size()*/; yy++)
+		for (int y = 0; y < 6/*board.size()*/; y++)
 		{
-			row = yy; //row number
-			for (int x = 0; x < 6/*board[row].size()*/; x++)
+			row = y; //row number
+			for (int x = 0; x < 7/*board[row].size()*/; x++)
 			{
-				p = new Point(x*100,yy*100+30);
+				p = new Point(x*100,y*100+64);
 				pts_row.push_back(p); //add board to the row
 			}
 
@@ -151,21 +149,21 @@ int year = aTime->tm_year + 1900; // Year is # years since 1900*/
 
 		/*Line horizontal(Point(100,100),Point(200,100));  // make a horizontal line
 		Line vertical(Point(150,50),Point(150,150));     // make a vertical line
-		win1.attach(horizontal); //attach horizontal line to window
-		win1.attach(vertical); //attach vertical line to window
+		my_window.attach(horizontal); //attach horizontal line to window
+		my_window.attach(vertical); //attach vertical line to window
 		vertical.set_color(Color::magenta); */
 	  
 		//resize handling code (only checks width)
 		while(true)
 		{
-			win1.redraw();
-			width = win1.Fl_Widget::w();
+			my_window.redraw();
+			width = my_window.Fl_Widget::w();
 			old_width = width;
 			cout << old_width << endl;
 			do
 			{
 				Fl::wait(1);	//wait up to 1 second
-				width = win1.Fl_Widget::w();
+				width = my_window.Fl_Widget::w();
 			}
 			while(width == old_width);
 		}
