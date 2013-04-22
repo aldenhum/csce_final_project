@@ -94,6 +94,11 @@ void Calendar_window::next()
 		int month_start_day = 1;*/
 //};
 
+string days_array[] {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+int choose_day(int q, int m, int K, int J)
+{
+	return (q+((13*(m+1))/5)+K+(K/4)+(J/4)+5*J)%7;
+}
 int main()
 {
 	try
@@ -123,18 +128,43 @@ int year = aTime->tm_year + 1900; // Year is # years since 1900*/
 			error("Error: incorrect std_lib_facilities_3.h version ", H112);
 		
 		Calendar_window my_window(Point(10,10),width,690,"Calendar"); //declare window
-
-		Text sun(Point(50,45),"Sunday");
-		sun.set_color(Color::blue);
-
-		Text mon(Point(105,60), "Monday");
-		Text tue(Point(205,60), "Tuesday");
-		Text wed(Point(305,60), "Wednesday");
-		Text thu(Point(405,60), "Thursday");
-		Text fri(Point(505,60), "Friday");
-		Text sat(Point(605,60), "Saturday");
+		
+		Text random_number(Point(250,250), days_array[choose_day(25,6,2005%100,20)]);
+		
+		Text mon(Point(128,56), "Monday");
+		Text tue(Point(224,56), "Tuesday");
+		Text wed(Point(316,56), "Wednesday");
+		Text thu(Point(420,56), "Thursday");
+		Text fri(Point(528,56), "Friday");
+		Text sat(Point(624,56), "Saturday");
+		Text sun(Point(28,56),"Sunday");
+		
+		random_number.set_font_size(12);
+		
+		sun.set_color(Color::green);
+		sun.set_font_size(12);
+		mon.set_color(Color::green);
+		mon.set_font_size(12);
+		tue.set_color(Color::green);
+		tue.set_font_size(12);
+		wed.set_color(Color::green);
+		wed.set_font_size(12);
+		thu.set_color(Color::green);
+		thu.set_font_size(12);
+		fri.set_color(Color::green);
+		fri.set_font_size(12);
+		sat.set_color(Color::green);
+		sat.set_font_size(12);
+		
+		my_window.attach(random_number);
+		my_window.attach(mon);
+		my_window.attach(tue);
+		my_window.attach(wed);
+		my_window.attach(thu);
+		my_window.attach(fri);
+		my_window.attach(sat);
 		my_window.attach(sun);
-
+		
 		int row = 0;
 		for (int y = 0; y < 6/*board.size()*/; y++)
 		{
