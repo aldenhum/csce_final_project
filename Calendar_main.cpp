@@ -20,6 +20,9 @@ struct Calendar_window : Graph_lib::Window 	// Lines_window inherits from Window
 		attach(next_button);
 		attach(quit_button);
 	}
+
+	//void  draw_days(Window& win);
+
 	private:
 		Button prev_button;
 		Button next_button;		// declare some buttons – type Button
@@ -121,6 +124,17 @@ int year = aTime->tm_year + 1900; // Year is # years since 1900*/
 		
 		Calendar_window my_window(Point(10,10),width,690,"Calendar"); //declare window
 
+		Text sun(Point(50,45),"Sunday");
+		sun.set_color(Color::blue);
+
+		Text mon(Point(105,60), "Monday");
+		Text tue(Point(205,60), "Tuesday");
+		Text wed(Point(305,60), "Wednesday");
+		Text thu(Point(405,60), "Thursday");
+		Text fri(Point(505,60), "Friday");
+		Text sat(Point(605,60), "Saturday");
+		my_window.attach(sun);
+
 		int row = 0;
 		for (int y = 0; y < 6/*board.size()*/; y++)
 		{
@@ -183,3 +197,15 @@ int year = aTime->tm_year + 1900; // Year is # years since 1900*/
 		return 2;
 	}
 }
+
+/*void Calendar_window::draw_days(Window& win)
+{
+	Text sun(Point(5,60),"Sunday");
+	Text mon(Point(105,60), "Monday");
+	Text tue(Point(205,60), "Tuesday");
+	Text wed(Point(305,60), "Wednesday");
+	Text thu(Point(405,60), "Thursday");
+	Text fri(Point(505,60), "Friday");
+	Text sat(Point(605,60), "Saturday");
+	win.attach(sun);
+}*/
