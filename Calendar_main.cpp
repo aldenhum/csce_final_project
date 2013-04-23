@@ -61,11 +61,7 @@ void Calendar_window::quit()
 
 void Calendar_window::prev()
 {
-	//TODO:
-	/*
-	Figure out the month which preceeds the current one...
-	Update the display with the previous month's info...
-	*/
+	//stuff: start.add_month(-1);
 	redraw();
 }
 
@@ -94,10 +90,28 @@ void Calendar_window::next()
 		int month_start_day = 1;*/
 //};
 
+class Appt_date
+{
+	int day;
+	int month;
+	int year;
+	string title;
+	public:
+	Appt_date(int d, int m, int y, string t) :day(d), month(m), year(y), title(t) {}
+};
+
 string days_array[] {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+string months_array[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 int choose_day(int q, int m, int K, int J)
 {
-	return (q+((13*(m+1))/5)+K+(K/4)+(J/4)+5*J)%7;
+	if(m==2 && q==29)
+	{
+		return (q+((13*(m+1))/5)+K+(K/4)+(J/4)+5*J)%7 + 2;
+	}
+	else
+	{
+		return (q+((13*(m+1))/5)+K+(K/4)+(J/4)+5*J)%7;
+	}
 }
 int main()
 {
@@ -107,16 +121,11 @@ int main()
 		int y;
 		int m;
 		int d;
-		/*cout << "Please enter a date (YYYY MM DD):: ";
+		cout << "Please enter a date (YYYY MM DD):: ";
 		cin >> y >> m >> d;
 		cout << endl;
 		start = Chrono::Date(y,(Chrono::Date::Month)(m),d);
-		/*time_t theTime = time(NULL);
-struct tm *aTime = localtime(&theTime);
-
-int day = aTime->tm_mday;
-int month = aTime->tm_mon + 1; // Month is 0 - 11, add 1 to get a jan-dec 1-12 concept
-int year = aTime->tm_year + 1900; // Year is # years since 1900*/
+		
 		int width = 700;
 		int square_size = 100;
 		int old_width;
@@ -129,7 +138,23 @@ int year = aTime->tm_year + 1900; // Year is # years since 1900*/
 		
 		Calendar_window my_window(Point(10,10),width,690,"Calendar"); //declare window
 		
-		Text random_number(Point(250,250), days_array[choose_day(25,6,2005%100,20)]);
+		/*string input_file = "appointments.txt";
+		string collect_str;
+		ifstream ist(input_file.c_str());
+		if(!ist) error("can't open input file",input_file);
+		else
+		{
+			vector<Appt_date> temps;
+			int day;
+			int month;
+			int year;
+			string title;
+			while(ist>>day>>month>>year>>title)
+				temps.push_back(Appt_date(day, month, year, title));
+		}*/
+		
+		
+		Text random_number(Point(250,250), days_array[choose_day(d,m,y%100,y/100)]);
 		
 		Text mon(Point(128,56), "Monday");
 		Text tue(Point(224,56), "Tuesday");

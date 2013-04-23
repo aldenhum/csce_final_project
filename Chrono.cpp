@@ -43,9 +43,8 @@ void Date::add_day(int n)
 
 void Date::add_month(int n)
 {
-	if (n<0) error("add_month(): cnot implemented");	// not yet
 	int num_years = n/12;
-	n%=12;
+	abs(n)%=12;
 	m = (Month)((int)(m)+n);
 	add_year(num_years);
 	// ...
