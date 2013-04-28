@@ -3,8 +3,11 @@
 #include "Graph.h"
 #include "GUI.h"
 #include "Point.h"
-#include "Chrono.h"
-//#include <time.h> //not needed //still not needed
+
+#ifndef CHRONO_H
+#define CHRONO_H
+	#include "Chrono.h"
+#endif
 
 using namespace Graph_lib;
 
