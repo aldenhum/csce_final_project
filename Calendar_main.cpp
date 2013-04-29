@@ -16,12 +16,14 @@ struct Calendar_window : Graph_lib::Window 	// Lines_window inherits from Window
 	Calendar_window(Point xy, int w, int h, const string& title) // Constructor...
 	:Graph_lib::Window(xy,w,h,title),
 	prev_button(Point(0,0),  		 128, 20, "Previous Month", cb_prev),
-	next_button(Point(133,0), 		 100, 20, "Next Month",	   cb_next),
-	quit_button(Point(x_max()-70,0), 70, 20, "QUIT", 	  	   cb_quit)
+	next_button(Point(128,0), 		 100, 20, "Next Month",	   cb_next),
+	quit_button(Point(x_max()-70,0), 70, 20, "QUIT", 	  	   cb_quit),
+	appointment_button(Point(228,0), 116, 20, "Appointments",  cb_appointment)
 	{
 		attach(prev_button);
 		attach(next_button);
 		attach(quit_button);
+		attach(appointment_button);
 	}
 
 	//void  draw_days(Window& win);
@@ -30,14 +32,17 @@ struct Calendar_window : Graph_lib::Window 	// Lines_window inherits from Window
 		Button prev_button;
 		Button next_button;		// declare some buttons – type Button
 		Button quit_button;
+		Button appointment_button;
 
 		void prev();			//what to do when prev_button is pushed
 		void next(); 			//what to do when next_button is pushed
 		void quit(); 			//what to do when quit_button is pushed
+		void appointment();		//"		"		appointment_button	"	
 
 		static void cb_prev(Address, Address window); // callback for the previous month button
 		static void cb_next(Address, Address window); // callback for the next month button
 		static void cb_quit(Address, Address window); 	// callback for quit_button
+		static void cb_appointment(Address, Address window); // callback for appointment_button
 }; 
 
 //The callback functions... Just pass data along to "worker" functions
@@ -54,6 +59,11 @@ void Calendar_window::cb_prev(Address, Address window)
 void Calendar_window::cb_next(Address, Address window)
 {
 	reference_to<Calendar_window> (window).next();
+}
+
+void Calendar_window::cb_appointment(Address, Address window)
+{
+	reference_to<Calendar_window> (window).appointment();
 }
 
 //Our "worker" functions
@@ -76,6 +86,24 @@ void Calendar_window::next()
 	Update the display with the next month's info
 	*/
 	redraw();
+}
+
+void Calendar_window::appointment()
+{
+	/*string input_file = "appointments.txt";
+		string collect_str;
+		ifstream ist(input_file.c_str());
+		if(!ist) error("can't open input file",input_file);
+		else
+		{
+			vector<Appt_date> temps;
+			int day;
+			int month;
+			int year;
+			string title;
+			while(ist>>day>>month>>year>>title)
+				temps.push_back(Appt_date(day, month, year, title));
+		}*/
 }
 
 //struct Calendar_Day 
@@ -105,16 +133,19 @@ class Appt_date
 
 string days_array[] {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 string months_array[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+
 int choose_day(int q, int m, int K, int J)
 {
-	if(m==2 && q==29)
-	{
-		return (q+((13*(m+1))/5)+K+(K/4)+(J/4)+5*J)%7 + 2;
-	}
-	else
-	{
-		return (q+((13*(m+1))/5)+K+(K/4)+(J/4)+5*J)%7;
-	}
+	if(m==1) {K-=1; m=13;}
+	if(m==2) {K-=1; m=14;}
+		/*if(m==1 && q==29)
+		{
+			return (q+((13*(m+1))/5)+K+(K/4)+(J/4)+5*J)%7 + 2;
+		}
+		else*/
+		//{
+			return (q+((26*(m+1))/10)+(K%100)+((K%100)/4)+(J/4)+5*J)%7;
+		//}
 }
 int main()
 {
@@ -141,23 +172,7 @@ int main()
 		
 		Calendar_window my_window(Point(10,10),width,690,"Calendar"); //declare window
 		
-		/*string input_file = "appointments.txt";
-		string collect_str;
-		ifstream ist(input_file.c_str());
-		if(!ist) error("can't open input file",input_file);
-		else
-		{
-			vector<Appt_date> temps;
-			int day;
-			int month;
-			int year;
-			string title;
-			while(ist>>day>>month>>year>>title)
-				temps.push_back(Appt_date(day, month, year, title));
-		}*/
-		
-		
-		Text random_number(Point(250,250), days_array[choose_day(d,m,y%100,y/100)]);
+		Text random_number(Point(250,250), days_array[choose_day(d,m,y,y/100)]); // calc the day of the week
 		
 		Text mon(Point(128,56), "Monday");
 		Text tue(Point(224,56), "Tuesday");
